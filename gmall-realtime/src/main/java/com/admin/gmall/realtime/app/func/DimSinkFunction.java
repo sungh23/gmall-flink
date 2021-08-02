@@ -2,6 +2,7 @@ package com.admin.gmall.realtime.app.func;
 
 import com.admin.gmall.realtime.common.GmallConfig;
 
+import com.admin.gmall.realtime.utils.DimUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.flink.configuration.Configuration;
@@ -50,6 +51,13 @@ public class DimSinkFunction extends RichSinkFunction<JSONObject> {
 
             //预编译
             preparedStatement = connection.prepareStatement(upsertSql);
+
+            //判断当前是否为更新操作 如果是更新操作 需要删除redis中的旧数据
+            if ("update".equals(value.getString("type"))) {
+                String redisKey="DIM:" + value.getString("sinkTable").toUpperCase() + ":" + value.getJSONObject("data").getString("id");
+                DimUtil.delDimInfo(redisKey);
+            }
+
             //执行
             preparedStatement.execute();
             connection.commit();

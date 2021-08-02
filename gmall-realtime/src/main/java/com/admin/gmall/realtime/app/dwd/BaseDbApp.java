@@ -45,7 +45,7 @@ public class BaseDbApp {
         String topic = "ods_base_db";
         String groupId = "BaseDbApp";
         DataStreamSource<String> kafkaOdsBaseDbDS = env.addSource(MyKafkaUtil.getFlinkKafkaConsumer(topic, groupId));
-        kafkaOdsBaseDbDS.print("kafkaOdsBaseDbDS:");
+//        kafkaOdsBaseDbDS.print("kafkaOdsBaseDbDS:");
 
         //TODO 3.将每行数据转换为JSONObject         主流
         SingleOutputStreamOperator<JSONObject> jsonObjDS = kafkaOdsBaseDbDS.map(JSONObject::parseObject)
@@ -57,7 +57,7 @@ public class BaseDbApp {
                     }
                 });
 
-        jsonObjDS.print("jsonObjDS:");
+//        jsonObjDS.print("jsonObjDS:");
         // todo 4 使用flinkCDC监控Mysql数据库中 配置表变化
         DebeziumSourceFunction<String> sourceFunction = MySQLSource.<String>builder()
                 .hostname("hadoop102")

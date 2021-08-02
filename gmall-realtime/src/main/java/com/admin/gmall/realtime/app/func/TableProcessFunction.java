@@ -58,9 +58,9 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
 
         //解析数据
         JSONObject json = JSONObject.parseObject(value);
-        System.out.println("json = " + json);
+//        System.out.println("json = " + json);
         TableProcess tableProcess = JSONObject.parseObject(json.getString("data"), TableProcess.class);
-        System.out.println("tableProcess = " + tableProcess);
+//        System.out.println("tableProcess = " + tableProcess);
 
         // 根据操作类型 和 sink类型 判断是否需要在hbase中创建表格
         // todo type按照那个字段为准
@@ -77,7 +77,7 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
         // 写入状态  广播出去
         BroadcastState<String, TableProcess> broadcastState = ctx.getBroadcastState(stateDescriptor);
         String key = tableProcess.getSourceTable() + "_" + tableProcess.getOperateType();
-        System.out.println("key1 = " + key);
+//        System.out.println("key1 = " + key);
         broadcastState.put(key, tableProcess);
 
     }
@@ -145,7 +145,7 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
         //获取广播流
         ReadOnlyBroadcastState<String, TableProcess> broadcastState = ctx.getBroadcastState(stateDescriptor);
         String key = value.getString("tableName") + "_" + value.getString("type");
-        System.out.println("key2 = " + key);
+//        System.out.println("key2 = " + key);
         TableProcess tableProcess = broadcastState.get(key);
 
         if (null != tableProcess) {
