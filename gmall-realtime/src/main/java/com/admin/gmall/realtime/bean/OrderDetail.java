@@ -2,6 +2,7 @@ package com.admin.gmall.realtime.bean;
 
 import lombok.Data;
 
+import java.beans.Transient;
 import java.math.BigDecimal;
 
 @Data

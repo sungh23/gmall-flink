@@ -1,6 +1,7 @@
 package com.admin.gmall.realtime.app.dws;
 
 import com.admin.gmall.realtime.bean.VisitorStats;
+import com.admin.gmall.realtime.utils.ClickHouseUtil;
 import com.admin.gmall.realtime.utils.DateTimeUtil;
 import com.admin.gmall.realtime.utils.MyKafkaUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -21,6 +22,8 @@ import java.time.Duration;
 import java.util.Date;
 
 /**
+ * 数据流  wep/app ->nginx -> springboot -> kafka(ods)-> flinkApp -> kafka(dwd)-> flinkApp ->kafka(dwm)-> flinkApp ->clickhouse
+ * 程 序      mock ->nginx ->logger -> kafka(ods_base_log) -> baseLogApp -> kafka -> UniqueVisitApp/UserJumpDetailApp ->kafka ->VisitorStatsApp ->clickHouse
  * @author sungh
  */
 public class VisitorStatsApp {
@@ -161,7 +164,11 @@ public class VisitorStatsApp {
             }
         });
 
-        result.print();
+        result.print("result:");
+
+
+        //将数据写入到clickHouse
+        result.addSink(ClickHouseUtil.getSink("insert into visitor_stats_210225 values(?,?,?,?,?,?,?,?,?,?,?,?)"));
 
         env.execute();
 
