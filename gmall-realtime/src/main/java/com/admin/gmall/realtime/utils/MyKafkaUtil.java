@@ -45,4 +45,15 @@ public class MyKafkaUtil {
         return new FlinkKafkaConsumer<String>(topic,
                 new SimpleStringSchema(), properties);
     }
+
+    public static String getKafkaDDL(String topic, String groupId) {
+        return " WITH (" +
+                "  'connector' = 'kafka'," +
+                "  'topic' = '"+topic+"'," +
+                "  'properties.bootstrap.servers' = '"+kafkaServer+":9092'," +
+                "  'properties.group.id' = '"+groupId+"'," +
+                "  'scan.startup.mode' = 'latest-offset'," +
+                "  'format' = 'json'" +
+                ")";
+    }
 }

@@ -35,6 +35,21 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author sungh
+ *
+ * 功    能：商品主题宽表
+ * 实现思路：    1、消费kafka数据 （dwd_page_log,dwm_order_wide,dwm_payment_wide
+ *              四张维度表数据 dwd_cart_info，dwd_favor_info,dwd_order_refund_info,dwd_comment_info ）
+ *              2、将流转换为 ProductStats 类 统一数据格式
+ *              2.1 设计orderIdSet集合来保存订单数据 用来对订单数据去重，则Set.size 为去重后订单总数
+ *              2.1 设计paidOrderIdSet集合来保存支付订单数据 去重，则Set.size 为去重后支付订单总数
+ *              2.1 设计refundOrderIdSet集合来保存退款支付订单数据 去重，则Set.size 为去重后退款订单总数
+ *              3、union数据流
+ *              4、指定WaterMark 设置延迟时间
+ *              5、分组、开窗、聚合 补充窗口开始时间、结束时间、订单  支付订单 退款订单条数（SET、size）
+ *              6、关联维度数据  补全维度字段
+ *              7、写入clickHouse
+ *              8、执行
+ *
  */
 public class ProductStatsApp {
     public static void main(String[] args) throws Exception {
