@@ -118,7 +118,7 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
                 }
             }
             //拼接最后一个括号  sql拼接完成
-            createTableSql.append(")");
+            createTableSql.append(")").append(sinkExtend);
 
             System.out.println("createTableSql = " + createTableSql);
 
